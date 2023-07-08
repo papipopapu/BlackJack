@@ -9,20 +9,28 @@
 #include <random>
 
 
-int DECK_1[12] = { 52, 4, 4, 4, 4, 4, 4, 4, 4, 4, 16, 4,};
+int DECK_1[10] = {4, 4, 4, 4, 4, 4, 4, 4, 16, 4}; // 2, 3, 4, 5, 6, 7, 8, 9, 10, ACE
+// Cards: 2, 3, 4, 5, 6, 7, 8, 9, 10, ACE
+// Corresponding index: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+
 class Deck {
     private:
         std::vector<Card> cards;
         int card_list[12];
-        int card_index;
+        int card_index, card_count;
         const int seed = 0;
+        // create mt19937 object and seed it with 0
         std::mt19937 rng;
+
     public:
         Deck();
+        float get_card_prob(int card_idx) {
+            return (float)card_list[card_idx] / card_count;
+        }
         void set_cards(int card_list[12]);
         void shuffle();
         void print_card_list() {
-            for (int i = 0; i < 12; i++) {
+            for (int i = 0; i < 10; i++) {
                 std::cout << card_list[i] << " ";
             }
             std::cout << std::endl;
@@ -34,25 +42,31 @@ class Deck {
             std::cout << std::endl;
         }
         Card draw() {
-            return cards[card_index++];
+            Card card = cards[card_index++];
+            card_list[card - 2]--;
+            card_count--;
+            return card;
         }
 };
 Deck::Deck() : card_index(0) {
     rng.seed(seed);
 }
 void Deck::set_cards(int card_list[12]) {
-    for (int i = 0; i < 12; i++) {
+    card_count = 0;
+    for (int i = 0; i < 10; i++) {
         this->card_list[i] = card_list[i];
+        card_count += card_list[i];
     }
     cards.clear();
-    cards.reserve(card_list[0]);
-    for (int i = 2; i < 12; i++) {
+    cards.reserve(card_count);
+    for (int i = 0; i < 10; i++) {
         for (int j = 0; j < card_list[i]; j++) {
-            cards.push_back(static_cast<Card>(i));
+            cards.push_back(static_cast<Card>(i+2));
         }
     }
 }
 void Deck::shuffle() {
+    card_index = 0;
     std::shuffle(cards.begin(), cards.end(), rng);
 }
 

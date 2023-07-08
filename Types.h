@@ -1,5 +1,6 @@
 #ifndef TYPES_H
 #define TYPES_H
+#include <random>
 enum Card {
     ACE = 11,
     TWO = 2,
@@ -13,15 +14,20 @@ enum Card {
     TEN = 10,
     JACK = 10,
     QUEEN = 10,
-    KING = 10
+    KING = 10,
 };
 
 enum Action {
-    HIT,
+    HIT=0,
     STAND,
     DOUBLE,
-    SPLIT
+    SPLIT,
+    ACTION_N
 };
+
+
+
+
 
 
 using Payout = float;

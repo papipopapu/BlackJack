@@ -34,9 +34,15 @@ class Simulation {
             float payout = 0;
             float num_hands = 1;
             
-            // Initial house hand + peek at second card
+            // Initial house hand + peek at second card, if second card gives blackjack, add it so its accounted for in natural blackjack check
             Hand house_initial = Hand(house_card);
-            if (house_card >= TEN) house_initial.add(deck.draw()); // peek at second card
+            if (house_card == TEN) {
+                Card second_card = deck.peek();
+                if (second_card == ACE) house_initial.add(deck.draw());
+            } else if (house_card == ACE) {
+                Card second_card = deck.peek();
+                if (second_card == TEN) house_initial.add(deck.draw());
+            }
 
             // Initial player hand
             Hand player = Hand(c_1);
@@ -55,17 +61,17 @@ class Simulation {
             Hand house_final = house_initial;
             while (!house_final.is_house_stands()) { // get house 
                 house_final.add(deck.draw());
-                std::cout << "house score: " << house_final.get_score() << std::endl;
+                //std::cout << "house score: " << house_final.get_score() << std::endl;
             }
             
             // Keep doing shit until all hands are resolved (so much for splitting lmao)
             while (!hands.empty()) {
-                std::cout << "//////////////////////" << std::endl;
+                //std::cout << "//////////////////////" << std::endl;
                 Hand hand = hands.top();
                 hands.pop();
                 set_split_rights(player, max_hands, num_hands); // maybe to do update all rights
                 Action action = policy(deck, hand, house_initial); // must only know the first* card of the house
-                std::cout << "action: " << action << std::endl;
+                //std::cout << "action: " << action << std::endl;
                 if (action == HIT) {
                     hand.add(deck.draw());
                     if (hand.is_busted()) {
@@ -75,7 +81,7 @@ class Simulation {
                         hands.push(hand);
                     }
                 } else if (action == STAND) {
-                    std::cout << "player cards: " << hand << std::endl;
+                    //std::cout << "player cards: " << hand << std::endl;
              
                     if (house_final.is_busted()) {
                         payout += 1;

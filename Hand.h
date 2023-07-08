@@ -19,6 +19,7 @@ class Hand {
         void add(Card card);
         void split(Deck &deck, std::stack<Hand> &hands);
         int get_score() { return score; }
+        bool is_soft() { return high_aces > 0; }
         bool is_pair() { return cards.size() == 2 && cards[0] == cards[1]; }
         bool is_busted() { return score > 21; }
         bool is_blackjack() { return score == 21 && cards.size() == 2; }
