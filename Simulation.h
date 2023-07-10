@@ -72,18 +72,18 @@ class Simulation {
             Hand house_final = house_initial;
             while (!house_final.is_house_stands()) { // get house 
                 house_final.add(deck.draw());
-                std::cout << "house score: " << house_final.get_score() << std::endl;
+                if (DEBUG) std::cout << "house score: " << house_final.get_score() << std::endl;
             }
             
             // Keep doing shit until all hands are resolved (so much for splitting lmao)
             while (!hands.empty()) {
-                std::cout << "//////////////////////" << std::endl;
+                if (DEBUG) std::cout << "//////////////////////" << std::endl;
                 Hand hand = hands.top();
                 hands.pop();
                 set_split_rights(hand, max_hands, num_hands); // maybe to do update all rights
                 Action action = policy(deck, hand, house_initial); // must only know the first card of the house
-                std::cout << "action: " << action << std::endl;
-                std::cout << "hand: " << hand << std::endl;
+                if (DEBUG) std::cout << "action: " << action << std::endl;
+                if (DEBUG) std::cout << "hand: " << hand << std::endl;
                 if (action == HIT) {
                     hand.add(deck.draw());
                     if (hand.is_busted()) {
@@ -93,7 +93,7 @@ class Simulation {
                         hands.push(hand);
                     }
                 } else if (action == STAND) {
-                    std::cout << "player cards: " << hand << std::endl;
+                    if (DEBUG) std::cout << "player cards: " << hand << std::endl;
              
                     if (house_final.is_busted()) {
                         payout += 1;
@@ -125,7 +125,7 @@ class Simulation {
 
         }
 
-        Payout run(Agent &agent, Deck deck) { // maybe change to referebnce
+        Payout run(Agent &agent, Deck &deck) { // maybe change to referebnce
 
             Card c_1 = deck.draw(), c_2 = deck.draw(), house_card = deck.draw();
 
@@ -160,18 +160,18 @@ class Simulation {
             Hand house_final = house_initial;
             while (!house_final.is_house_stands()) { // get house 
                 house_final.add(deck.draw());
-                std::cout << "house score: " << house_final.get_score() << std::endl;
+                if (DEBUG) std::cout << "house score: " << house_final.get_score() << std::endl;
             }
             
             // Keep doing shit until all hands are resolved (so much for splitting lmao)
             while (!hands.empty()) {
-                std::cout << "//////////////////////" << std::endl;
+                if (DEBUG) std::cout << "//////////////////////" << std::endl;
                 Hand hand = hands.top();
                 hands.pop();
                 set_split_rights(hand, max_hands, num_hands); // maybe to do update all rights
                 Action action = agent.get_action(deck, hand, house_initial);
-                std::cout << "action: " << action << std::endl;
-                std::cout << "hand: " << hand << std::endl;
+                if (DEBUG) std::cout << "action: " << action << std::endl;
+                if (DEBUG) std::cout << "hand: " << hand << std::endl;
                 if (action == HIT) {
                     hand.add(deck.draw());
                     if (hand.is_busted()) {
@@ -181,7 +181,7 @@ class Simulation {
                         hands.push(hand);
                     }
                 } else if (action == STAND) {
-                    std::cout << "player cards: " << hand << std::endl;
+                    if (DEBUG) std::cout << "player cards: " << hand << std::endl;
              
                     if (house_final.is_busted()) {
                         payout += 1;
@@ -192,7 +192,7 @@ class Simulation {
                     }
                 } else if (action == DOUBLE) {
                     hand.add(deck.draw());
-                    std::cout << "player cards: " << hand << std::endl;
+                    if (DEBUG) std::cout << "player cards: " << hand << std::endl;
                         if (hand.is_busted()) {
                             payout -= 2;
                         } else {

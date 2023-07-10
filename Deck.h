@@ -47,10 +47,12 @@ class Deck {
             std::cout << std::endl;
         }
         Card draw() {
-            if (card_count <= min_card_count) reset(); // might change to shuffle
+            if (DEBUG) std::cout << "Drawing: card count: " << card_count << std::endl;
+            if (DEBUG) std::cout << "min card count: " << min_card_count << std::endl;
             Card card = cards[card_index++];
             card_list[card - 2]--;
             card_count--;
+            if (card_count <= min_card_count) reset(); // might change to shuffle
             return card;
         }
         Card peek() {
@@ -76,6 +78,8 @@ void Deck::reset() {
         card_list[i] = card_list_0[i];
         card_count += card_list[i];
     }
+    if (DEBUG) std::cout << "ALERT: Deck reset" << std::endl;
+    if (DEBUG) std::cout << "card count: " << card_count << std::endl;
 }
 void Deck::set_cards(int card_list[10]) {
     card_count = 0;

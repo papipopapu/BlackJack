@@ -66,6 +66,7 @@
         "xutility": "cpp",
         "queue": "cpp",
         "deque": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "numeric": "cpp"
     }
 }

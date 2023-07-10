@@ -6,10 +6,10 @@
 #include <algorithm>
 
 
-std::mt19937 GLOBAL_RNG(0);
+std::mt19937 GLOBAL_RNG(1);
 
 bool compare(const float& a, const float& b) {
-    return a > b;
+    return a < b;
 }
 template <typename T, typename Compare>
 std::vector<int> sort_permutation(

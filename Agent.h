@@ -40,6 +40,15 @@ class Agent {
         for (int i = 0; i < 10; i++) {
             score += weights[action][player_idx][house_idx][i] * deck.get_card_prob(i);
         }
+        if (std::isnan(score)) {
+            std::cout << "nan score ALERT ALERT ALERT ALERT ALERT" << std::endl;
+            float score = 0;
+            for (int i = 0; i < 10; i++) {
+                std::cout << "weight: " << weights[action][player_idx][house_idx][i] << std::endl;
+                std::cout << "prob: " << deck.get_card_prob(i) << std::endl;
+            }
+
+        }
         return score;
     }
     Action get_action(Deck &deck, Hand player, Hand house) {
@@ -50,6 +59,8 @@ class Agent {
         float best_score = get_action_score(STAND, deck, player, house);
 
         if (player.can_double) {
+            if (DEBUG) std::cout << "can double" << std::endl;
+            if (DEBUG) std::cout << "double score: " << get_action_score(DOUBLE, deck, player, house) << std::endl;
             if (get_action_score(DOUBLE, deck, player, house) > best_score) {
                 best_action = DOUBLE;
                 best_score = get_action_score(DOUBLE, deck, player, house);
@@ -57,6 +68,8 @@ class Agent {
         }
 
         if (player.can_hit) {
+            if (DEBUG) std::cout << "can hit" << std::endl;
+            if (DEBUG) std::cout << "hit score: " << get_action_score(HIT, deck, player, house) << std::endl;
             if (get_action_score(HIT, deck, player, house) > best_score) {
                 best_action = HIT;
                 best_score = get_action_score(HIT, deck, player, house);
@@ -64,14 +77,23 @@ class Agent {
         }
 
         if (player.can_split) {
+            if (DEBUG) std::cout << "can split" << std::endl;
+            if (DEBUG) std::cout << "split score: " << get_action_score(SPLIT, deck, player, house) << std::endl;
             if (get_action_score(SPLIT, deck, player, house) > best_score) {
                 best_action = SPLIT;
                 best_score = get_action_score(SPLIT, deck, player, house);
             }
         }
-
+        if (DEBUG) std::cout << "decided on action: " << best_action << std::endl;
         return best_action;
 
+    }
+
+    void print_first_10_weights() {
+        for (int i = 0; i < 10; i++) {
+            std::cout << weights[0][0][0][i] << " ";
+        }
+        std::cout << std::endl;
     }
 
     friend class Laboratory;
@@ -113,7 +135,8 @@ class Laboratory {
             float relative = relative_mutation(GLOBAL_RNG);
 
             
-            agent.weights[location / (PLAYER_SPACE * HOUSE_SPACE * DECK_SPACE)][(location / (HOUSE_SPACE * DECK_SPACE)) % PLAYER_SPACE][(location / DECK_SPACE) % HOUSE_SPACE][location % DECK_SPACE] *= relative;
+            agent.weights[location / (PLAYER_SPACE * HOUSE_SPACE * DECK_SPACE)][(location / (HOUSE_SPACE * DECK_SPACE)) % PLAYER_SPACE][(location / DECK_SPACE) % HOUSE_SPACE][location % DECK_SPACE]
+                     = relative; // testing making it absolute
         }
         return true;
     }

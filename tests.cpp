@@ -1,7 +1,8 @@
 #include "Hand.h"
 #include "Simulation.h"
 #include "Agent.h"
-
+#include "Tools.h"
+#include "Petri.h"
 // test all methods of Hand
 void test_hand() {
     // test constructor
@@ -32,9 +33,7 @@ void test_hand() {
     Deck deck = Deck();
     deck.set_cards(DEFAULT_DECK);
 
-    std::mt19937 rng;
-    rng.seed(0);
-    deck.shuffle(rng);
+    deck.shuffle();
     std::stack<Hand> hands = std::stack<Hand>();
     hand.split(deck, hands);
     // print hands
@@ -42,6 +41,16 @@ void test_hand() {
     hands.pop();
     std::cout << "hand2: " << hands.top() << std::endl;
     hands.pop();
+}
+void test_deck() {
+    Deck deck = Deck(0.5);
+    deck.set_cards(DEFAULT_DECK);
+    deck.shuffle();
+    for (int i=0; i<100; i++) {
+        std::cout << deck.draw() << std::endl;
+        std::cout << "card_count: " << deck.get_card_count() << std::endl;
+
+    }
 }
 void test_simulation() {
     Simulation sim;
@@ -70,7 +79,7 @@ void test_agent() {
     Simulation sim;
     Deck deck;
     deck.set_cards(DEFAULT_DECK);
-    deck.shuffle(lab.get_rng());
+    deck.shuffle();
     
     Card house_card = NINE, c_1 = TWO, c_2 = TWO;
     Hand player, house;
@@ -122,18 +131,33 @@ void test_agent() {
     std::cout << std::endl;
 
     // test simulation with agent
-    Payout payout = sim.run_agent(agent3, deck);
+    Payout payout = sim.run(agent3, deck);
     std::cout << "payout: " << payout << std::endl;
 
 }
 
+void test_petri() {
+    Laboratory lab(-5, 5, 0.1, 0.2);
+    Simulation sim;
+    Deck deck;
+    deck.set_cards(DEFAULT_DECK);
+    
+    Petri petri(lab, deck, 1000, 100, 1, 0.2); // se sale si elite rate < 0.5 ????
+    petri.print_member_variables();
+    for (int i = 0; i < 100; i++) {
+        petri.run_one();
+        std::cout << "generation: " << i << std::endl;
+    }
+}
 
 
 
 int main() {
     /* test_hand();
-    test_simulation(); */
+    test_simulation();
     test_agent();
+    test_deck(); */
+    test_petri();
     return 0;
 }
 

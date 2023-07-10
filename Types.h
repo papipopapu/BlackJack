@@ -1,6 +1,11 @@
 #ifndef TYPES_H
 #define TYPES_H
 #include <random>
+
+
+const bool DEBUG = false;
+
+
 enum Card {
     ACE = 11,
     TWO = 2,
