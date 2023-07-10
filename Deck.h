@@ -17,20 +17,9 @@ int DEFAULT_DECK[10] = {4, 4, 4, 4, 4, 4, 4, 4, 16, 4}; // 2, 3, 4, 5, 6, 7, 8, 
 class Deck {
     protected:
         std::vector<Card> cards;
-        int card_list[10], card_list_0[10];
-        int card_index = 0, card_count, min_card_count;
-        float deck_penetration;
-
 
     public:
-        Deck(float deck_penetration); // !!!
-        Deck() : Deck(1) {} // full penetration 
-        float get_card_prob(int card_idx) { // card_idx := (int)(card - 2)
-            return (float)card_list[card_idx] / card_count;
-        }
-        int get_card_count() {
-            return card_count;
-        }
+        Deck(); // !!!
         void set_cards(int card_list[10]);
         void reset();
         void shuffle();
@@ -98,6 +87,6 @@ void Deck::set_cards(int card_list[10]) {
     }
     min_card_count = (int)((1 - deck_penetration) * card_count);
 }
-
+// nigga
 
 #endif
