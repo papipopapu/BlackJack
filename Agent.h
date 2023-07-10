@@ -4,9 +4,13 @@
 #include "Types.h"
 #include "Deck.h"
 #include "Hand.h"
+#include "Tools.h"
 #include <random>
 #include <algorithm>
 #include <iterator>
+#include <numeric>
+
+
 
 const int PLAYER_SPACE = 26, HOUSE_SPACE = 10, DECK_SPACE = 10;
 const int IS_SOFT_BOOST = 13; // 17 hards - 4 to shift to 0 the lowest score
@@ -81,13 +85,13 @@ class Laboratory {
     private:
     std::uniform_real_distribution<float> relative_mutation, unit_distribution;
     std::uniform_int_distribution<int> mutation_location;
-    std::mt19937 rng;
+
     float min_relative_mutation, max_relative_mutation, mutation_rate, mutation_extent;
     int mutation_n;
     public:
     Laboratory(float min_relative_mutation, float max_relative_mutation, float mutation_rate, float mutation_extent)
      : min_relative_mutation(min_relative_mutation), max_relative_mutation(max_relative_mutation), mutation_rate(mutation_rate), mutation_extent(mutation_extent) {
-        rng.seed(0);
+
         mutation_n = mutation_extent * (int)ACTION_N * PLAYER_SPACE * HOUSE_SPACE * DECK_SPACE;
         relative_mutation = std::uniform_real_distribution<float>(min_relative_mutation, max_relative_mutation);
         unit_distribution = std::uniform_real_distribution<float>(0, 1);
@@ -95,7 +99,7 @@ class Laboratory {
     }
     bool mutate_agent(Agent &agent) {
         // first generate a random number to see if we mutate, musat have mutation_rate chance
-        if (unit_distribution(rng) > mutation_rate) { // remove for testing
+        if (unit_distribution(GLOBAL_RNG) > mutation_rate) { // remove for testing
             return false;
         }
         // now mutate
@@ -104,9 +108,9 @@ class Laboratory {
         // iterate mutation_n times
         for (int i = 0; i < mutation_n; i++) {
             // get a random location
-            int location = mutation_location(rng); // i for testing
+            int location = mutation_location(GLOBAL_RNG); // i for testing
             // get a random relative mutation
-            float relative = relative_mutation(rng);
+            float relative = relative_mutation(GLOBAL_RNG);
 
             
             agent.weights[location / (PLAYER_SPACE * HOUSE_SPACE * DECK_SPACE)][(location / (HOUSE_SPACE * DECK_SPACE)) % PLAYER_SPACE][(location / DECK_SPACE) % HOUSE_SPACE][location % DECK_SPACE] *= relative;
@@ -116,13 +120,13 @@ class Laboratory {
     void set_random_weights(Agent &agent) {
         int N = ACTION_N * PLAYER_SPACE * HOUSE_SPACE * DECK_SPACE;
         for (int i = 0; i < N; i++) {
-            agent.weights[i / (PLAYER_SPACE * HOUSE_SPACE * DECK_SPACE)][(i / (HOUSE_SPACE * DECK_SPACE)) % PLAYER_SPACE][(i / DECK_SPACE) % HOUSE_SPACE][i % DECK_SPACE] = 2 * unit_distribution(rng) - 1;
+            agent.weights[i / (PLAYER_SPACE * HOUSE_SPACE * DECK_SPACE)][(i / (HOUSE_SPACE * DECK_SPACE)) % PLAYER_SPACE][(i / DECK_SPACE) % HOUSE_SPACE][i % DECK_SPACE] = 2 * unit_distribution(GLOBAL_RNG) - 1;
         }
     }  
 
     Agent reproduce_agents(Agent &agent_1, Agent &agent_2) {
         Agent child;
-        float random_split = unit_distribution(rng);
+        float random_split = unit_distribution(GLOBAL_RNG);
         for (int action=0; action < ACTION_N; action++) {
             for (int player_s=0; player_s < PLAYER_SPACE; player_s++) {
                 for (int house_s=0; house_s < HOUSE_SPACE; house_s++) {
@@ -136,8 +140,12 @@ class Laboratory {
         return child;
     }
 
-    std::mt19937& get_rng() {
-        return rng;
+    
+
+    
+
+    std::mt19937& get_GLOBAL_RNG() {
+        return GLOBAL_RNG;
     }
 };
 

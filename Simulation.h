@@ -38,7 +38,7 @@ class Simulation {
         // etc, different rules
         Simulation() : max_hands(4), hit_on_soft_17(true), bk_payout(1.5) {}
         
-        Payout run_on(Deck &deck, Card c_1, Card c_2, Card house_card) {
+        Payout run_on(Deck deck, Card c_1, Card c_2, Card house_card) {
             // same but now the two cards of the player are given and the first card of the house
 
             std::stack<Hand> hands;
@@ -125,7 +125,7 @@ class Simulation {
 
         }
 
-        Payout run_agent(Agent &agent, Deck &deck) {
+        Payout run(Agent &agent, Deck deck) { // maybe change to referebnce
 
             Card c_1 = deck.draw(), c_2 = deck.draw(), house_card = deck.draw();
 
