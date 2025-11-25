@@ -25,3 +25,7 @@ Makefile
 # OS-specific files
 .DS_Store
 Thumbs.db
+
+# CodeQL analysis files
+_codeql_build_dir/
+_codeql_detected_source_root
