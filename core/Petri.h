@@ -32,16 +32,13 @@ private:
     Deck deck;                      // Deck for simulations
     
     int n_agents;                   // Population size
-    int n_decks;                    // Number of decks (unused, for future)
     int n_simulations;              // Number of shuffle cycles per evaluation
     int n_sim_rounds;               // Games per shuffle cycle
     int n_kill;                     // Number of agents to eliminate each generation
     
-    float deck_penetration;         // Deck penetration for simulations
     float elite_rate;               // Fraction of agents to preserve
     
     std::uniform_int_distribution<int> random_parent;  // For selecting parents
-    std::mt19937 rng;               // Local RNG
     
     /**
      * @brief Replace worst agents with offspring of best agents
@@ -54,10 +51,10 @@ private:
         
         // Replace worst agents with offspring of random elite parents
         for (int i = 0; i < n_kill; i++) {
-            int parent_1 = random_parent(rng);
-            int parent_2 = random_parent(rng);
+            int parent_1 = random_parent(GLOBAL_RNG);
+            int parent_2 = random_parent(GLOBAL_RNG);
             while (parent_1 == parent_2) {
-                parent_2 = random_parent(rng);
+                parent_2 = random_parent(GLOBAL_RNG);
             }
             agents[indices[i]] = laboratory.reproduce_agents(agents[parent_1], agents[parent_2]);
         }

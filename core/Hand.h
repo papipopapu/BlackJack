@@ -108,12 +108,9 @@ Hand::Hand() : score(0), high_aces(0), can_split(false), can_double(true), can_h
     cards.reserve(5);
 }
 
-Hand::Hand(Card card) {
-    score = card;
-    high_aces = (card == ACE);
-    can_split = false;
-    can_double = true;
-    can_hit = true;
+Hand::Hand(Card card) 
+    : score(card), high_aces(card == ACE ? 1 : 0), 
+      can_split(false), can_double(true), can_hit(true) {
     cards.reserve(5);
     cards.push_back(card);
 }
